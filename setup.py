@@ -4,14 +4,14 @@ with open("README.md",'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="VerseTools-CrudeRags",
+    name="verse_tools-CrudeRags",
     version="0.0.1",
     author="Crude Rags",
     author_email="crude.rags@gmail.com",
     description="A package to get verses from different languages given reference in English",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/CrudeRags/VerseTools",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
