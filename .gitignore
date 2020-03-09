@@ -3,3 +3,12 @@ build
 dist
 verse_tools_CrudeRags.egg-info
 .idea
+*.xml
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
