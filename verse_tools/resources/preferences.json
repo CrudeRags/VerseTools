@@ -1,3 +1,11 @@
 {
-  "default_language": "English"
+  "default_language": "English",
+  "git_languages": [
+    "English",
+    "Hindi",
+    "Kannada",
+    "Malayalam",
+    "Tamil",
+    "Telugu"
+  ]
 }
