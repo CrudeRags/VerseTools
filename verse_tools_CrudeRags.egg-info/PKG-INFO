@@ -1,0 +1,46 @@
+Metadata-Version: 2.1
+Name: verse-tools-CrudeRags
+Version: 0.0.2
+Summary: A package to get verses from different languages given reference in English
+Home-page: https://github.com/CrudeRags/VerseTools
+Author: Crude Rags
+Author-email: crude.rags@gmail.com
+License: UNKNOWN
+Description: # VerseTools
+        
+        A package for getting Bible verses in different languages given references in English
+        
+        ### Prerequisites
+        
+        ```
+        Python version >= 3.6
+        ```
+        
+        ### Installing
+        
+        
+        
+        ### Usage
+        
+        
+        
+        ## Authors
+        
+        * **Crude Rags** - *Initial work* - [CrudeRags](https://github.com/https://github.com/CrudeRags)
+        
+        See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+        
+        ## License
+        
+        This project is licensed under the GNU GPL v3 License - see the [LICENSE](LICENSE) file for details
+        
+        ## Acknowledgments
+        
+        * Stackoverflow.com - for many insights and code snippets
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

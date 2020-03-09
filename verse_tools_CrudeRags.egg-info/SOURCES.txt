@@ -1,0 +1,11 @@
+README.md
+setup.py
+verse_tools/GetVerses.py
+verse_tools/__init__.py
+verse_tools/getResources.py
+verse_tools/resources/__init__.py
+verse_tools/resources/Bibles/__init__.py
+verse_tools_CrudeRags.egg-info/PKG-INFO
+verse_tools_CrudeRags.egg-info/SOURCES.txt
+verse_tools_CrudeRags.egg-info/dependency_links.txt
+verse_tools_CrudeRags.egg-info/top_level.txt

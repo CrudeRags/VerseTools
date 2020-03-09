@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95f371b4-1076-49e9-bdc3-facbbf1623f4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VerseTools/GetVerses.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VerseTools/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VerseTools/getResources.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VerseTools/resources/Bibles/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VerseTools/resources/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VerseTools/resources/preferences.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verse_tools/getResources.py" beforeDir="false" afterPath="$PROJECT_DIR$/verse_tools/getResources.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/verse_tools/resources/Bibles/EnglishBible.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,5 +37,11 @@
       <updated>1583653612133</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="668" y="347" key="com.intellij.ide.util.TipDialog" timestamp="1583674261914">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="668" y="347" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1583674261914" />
   </component>
 </project>
