@@ -36,32 +36,36 @@ downloadableBibles = "Remote Bibles:\n" + '\n'.join(display)
 
 
 # Start of Program
+def download():
 
-print(availableBibles)
-print()
-print(downloadableBibles)
-raw_input = input("\nYour Choice (can choose more than one): ")
+    print(availableBibles)
+    print()
+    print(downloadableBibles)
+    raw_input = input("\nYour Choice (can choose more than one): ")
 
-toDownload = [downloadableLanguages[i] for i in process_input(raw_input)]
+    toDownload = [downloadableLanguages[i] for i in process_input(raw_input)]
 
-for x in toDownload:
-    BibleName = x + "Bible.db"
-    with open(my_database_path + BibleName, 'wb') as out:
-        r = requests.get(my_url + BibleName, stream=True)
-        print("Downloading {}".format(BibleName))
-        total_length = r.headers.get('content-length')
+    for x in toDownload:
+        BibleName = x + "Bible.db"
+        with open(my_database_path + BibleName, 'wb') as out:
+            r = requests.get(my_url + BibleName, stream=True)
+            print("Downloading {}".format(BibleName))
+            total_length = r.headers.get('content-length')
 
-        if total_length is None:  # header does not have content-length
-            out.write(r.content)
-        else:
-            dl = 0
-            total_length = int(total_length)
-            for chunk in r.iter_content(chunk_size=4096):
-                dl += len(chunk)
-                out.write(chunk)
-                done = int(25*dl/total_length)
-                remaining = 25-done
-                sys.stdout.write("\r[{}{}]".format('='*done,' '*remaining))
-                sys.stdout.flush()
+            if total_length is None:  # header does not have content-length
+                out.write(r.content)
+            else:
+                dl = 0
+                total_length = int(total_length)
+                for chunk in r.iter_content(chunk_size=4096):
+                    dl += len(chunk)
+                    out.write(chunk)
+                    done = int(25*dl/total_length)
+                    remaining = 25-done
+                    sys.stdout.write("\r[{}{}]".format('='*done,' '*remaining))
+                    sys.stdout.flush()
 
-    print("Finished downloading {}".format(BibleName))
+        print("Finished downloading {}".format(BibleName))
+
+if __name__ == '__main__':
+    download()
