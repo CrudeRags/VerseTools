@@ -91,7 +91,7 @@ class GetVerses:
             encoded_ref = self.encode_ref(ref)
             self.c.execute('SELECT name FROM bookIndex WHERE num=?', (encoded_ref[0][0],))
             book_name = str(self.c.fetchone()[0])
-            old_book_name, _ = ref.split(' ')
+            old_book_name, _ = ref.split(' ',1)
             new_reference = book_name + ' ' + _
             _processed_.append((new_reference, encoded_ref))
 
@@ -139,7 +139,7 @@ class GetVerses:
         return verse_list
 
     @staticmethod
-    def __default_language_change__(lang):
+    def __set_default_lang__(lang):
         confirm = input("Are you sure you want to change default fallback language? (y/n): ")
         if confirm == 'y':
             with open(os.path.dirname(__file__) + "/resources/preferences.json", 'r') as rf:
@@ -171,7 +171,7 @@ if __name__ == "__main__":
         print("No language specified. Choosing {}".format(pref["default_language"]))
         args.lang = pref["default_language"]
     if args.change_language:
-        GetVerses.__default_language_change__(args.change_language)
+        GetVerses.__set_default_lang__(args.change_language)
 
     elif args.usage:
 
@@ -226,32 +226,32 @@ if __name__ == "__main__":
         print(usage)
 
     elif args.string or args.file:
-        my_final_output = []
+        output = []
 
         for _lang_ in args.lang:
 
             if args.string:
-                my_output = GetVerses(lang=_lang_).retrieve_verse(references=args.string)
-                my_final_output.append(my_output)
+                raw_out = GetVerses(lang=_lang_).retrieve_verse(references=args.string)
+                output.append(raw_out)
 
             elif args.file:
                 with open(args.file, 'r') as l:
                     my_refs = l.read().splitlines()
 
-                my_output = (GetVerses(lang=_lang_).retrieve_verse(references=my_refs))
-                my_final_output.append(my_output)
+                raw_out = (GetVerses(lang=_lang_).retrieve_verse(references=my_refs))
+                output.append(raw_out)
 
-        x = len(my_final_output)
-        y = len(my_final_output[0])
+        x = len(output)
+        y = len(output[0])
         z = [(b, a) for a in range(x) for b in range(y)]
         z.sort()
 
         if args.output:
             with open(args.output, 'w+', encoding='utf8') as out:
                 for b, a in z:
-                    out.write(my_final_output[a][b]['ref'] + ' ' + my_final_output[a][b]['verse'] + '\n\n')
+                    out.write(output[a][b]['ref'] + ' ' + output[a][b]['verse'] + '\n\n')
 
         else:
             for b, a in z:
-                print(my_final_output[a][b]['ref'] + ' ' + my_final_output[a][b]['verse'])
+                print(output[a][b]['ref'] + '\n' + output[a][b]['verse'] + "\n")
                 print()

@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="95f371b4-1076-49e9-bdc3-facbbf1623f4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/verse_tools/getResources.py" beforeDir="false" afterPath="$PROJECT_DIR$/verse_tools/getResources.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/verse_tools/resources/Bibles/EnglishBible.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/verse_tools/GetVerses.py" beforeDir="false" afterPath="$PROJECT_DIR$/verse_tools/GetVerses.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
