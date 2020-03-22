@@ -50,10 +50,10 @@ def process_input(i):
         else:
             yield int(x)
 
-def get(bible_name):
-    bible_name += "Bible.db"
-    if bible_name not in downloadableBibles:
-        sys.exit("{} not available")
+def get(lang):
+    bible_name = lang+"Bible.db"
+    if lang not in downloadableLanguages:
+        sys.exit("{} not available. \nAvailable Bibles: {}".format(bible_name,downloadableBibles))
     with open(my_database_path +"\\"+ bible_name, 'wb') as out:
         r = requests.get(db_url + bible_name, stream=True)
         print("Downloading {}".format(bible_name))
