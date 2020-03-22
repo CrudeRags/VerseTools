@@ -4,25 +4,41 @@ import sys
 import re
 import argparse
 import json
+from getResources import get
 
+def get_pref():
+    config_path = os.path.join(os.path.dirname(__file__), "config.json")
+
+    if not os.path.isfile(config_path):
+        run = 'python '+os.path.join(os.path.dirname(__file__),"getResources.py")
+        print(run)
+        os.system(run)
+
+    with open(config_path, 'r') as rf:
+        pref = json.load(rf)
+
+    return pref
+
+def get_resources(lang=None):
+    if lang is None:
+        path = os.path.join(os.path.dirname(__file__),"getResources.py")
+        os.system('python '+path)
+    else:
+        get(lang)
 
 class GetVerses:
     # Initialize class with language only
     def __init__(self, lang=None):
-        
-        self.__variables__()
 
-        try:
-            with open(os.path.dirname(__file__) + "config.json", 'r') as rf:
-                self.pref = json.load(rf)
-        except FileNotFoundError:
-            sys.exit('package not configured. Please run `getResources.py` first')
+        self.pref = get_pref()                   
         
         if lang is None:
             print("No language specified. Choosing {}".format(self.pref["default_language"]))
             self.lang = self.pref["default_language"]
         else:
             self.lang = lang.capitalize()
+        
+        self.__variables__() 
 
         self.__connect__()
 
@@ -63,15 +79,21 @@ class GetVerses:
         my_languages = [i.split("Bible")[0] for i in
                         list(filter(lambda x: x[-2:] == "db", os.listdir(self.my_database_path)))]
         if len(my_languages) < 1:
-            print("No Bibles are available. Kindly run `getResources.py` to download Bibles")
-            sys.exit()
-        lang_message = "Unknown language. Supported languages:\n" + '\n'.join(my_languages)
-        if self.lang not in my_languages:
-            sys.exit(lang_message)
+            get_resources()
+
+        unknown_lang = "Unknown language. Supported languages:\n" + '\n'.join(self.pref['git_languages'])
+        if self.lang not in self.pref['git_languages']:
+            print("you have chosen {}".format(self.lang))
+            sys.exit(unknown_lang)
+        elif self.lang not in my_languages:
+            print("{} is not available locally".format(self.lang))
+            downloadMore = input("Do you want to download {} Bible? (y/N)".format(self.lang))
+            if downloadMore == 'y':
+                get_resources(lang=self.lang)
 
     def __connect__(self):
         """Connect to Language specific database"""
-        db = self.my_database_path + '{}Bible.db'.format(self.lang)
+        db = os.path.join(self.my_database_path, '{}Bible.db'.format(self.lang))
 
         self.conn = sqlite3.connect(db)
         self.c = self.conn.cursor()
@@ -156,26 +178,24 @@ def set_lang(lang):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-l", "--lang", nargs='*', 
+    parser.add_argument("-l", "--lang", nargs='*',
                         help="Language you want to retrieve verses in - Enter full name")
-    parser.add_argument("-s", "--string", nargs='*',
-                        help="Input reference string (either this or `-f` flag must be used)")
-    parser.add_argument("-f", "--file", help="Input plain text file containing list of references")
     parser.add_argument("-o", "--output", help="Output file name. Ex: output.txt")
     parser.add_argument("-u", "--usage", help="Help regarding detailed usage")
     parser.add_argument("-c", "--change_language", help="change default language")
-
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-        sys.exit(1)
+    parser.add_argument("ref", help="reference to be looked up or name of file containing references")
 
     args = parser.parse_args()
 
+    if len(sys.argv) == 1 or not args.ref:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
     if args.lang is None:
-        with open(os.path.dirname(__file__) + "/resources/preferences.json", 'r') as rf:
-            pref = json.load(rf)
-        print("No language specified. Choosing {}".format(pref["default_language"]))
-        args.lang = pref["default_language"]
+        pref = get_pref()
+        print("\nNo language specified. Choosing {}\n".format(pref["default_language"]))
+        args.lang = [pref["default_language"]]
+    
     if args.change_language:
         set_lang(args.change_language)
 
@@ -186,27 +206,19 @@ if __name__ == "__main__":
         Detailed Help for GetVerses.py!        
 
 
-        usage: getVerses.py [-h] [-u USAGE] [-s STRING] [-f FILE] [-o OUTPUT] lang
+        usage: GetVerses.py [-h] [-l LANG] [-o OUTPUT] [-u USAGE] [-c CHANGE_LANGUAGE] ref
 
-
-        For usage one of the optional flag is essential [-s] or
-        [-f] along with the language you want output to be in. 
         This script takes in a single reference or a file containing
         multiple references - each reference in a single line. 
         It also takes in the name of the language in which you 
         want the output and either displays the verses with the 
         reference or writes it to a file for storing
 
-
-        -s Use this flag to input a single reference to the script
-
-        -f Use this flag to input a file containing multiple references
-
         -o Use this flag to specify the path of the output file 
 
         -l Specify in which language you want the output. If no language
-        is specified, it defaults to your preferred language. If no 
-        language has been set, it defaults to tamil
+        is specified, it defaults to your preferred language. More than
+        one language can be specified
 
         -c Change your default language
 
@@ -214,18 +226,18 @@ if __name__ == "__main__":
         Examples: 
 
 
-        getVerses.py -s "Ezra 1:1"         
+        getVerses.py "Ezra 1:1"         
 
         >This prints Ezra 1:1 in default language on screen
 
 
-        getVerses.py -s "Rev 1:7" -o "E:/my_verses.txt" -l English        
+        getVerses.py -o "E:/my_verses.txt" -l English "Rev 1:7"         
 
         >This creates a new file called "my_verses.txt" and prints 
         the verse in English into the file
 
 
-        getVerses.py -f "my_references.txt" -o "my_verses.txt" -l Telugu
+        getVerses.py -o "my_verses.txt" -l Telugu "my_references.txt" 
 
         >This reads all the references from my_references.txt and 
         ouputs the verses in Telugu into the file "my_verses.txt"
@@ -235,33 +247,30 @@ if __name__ == "__main__":
 
         print(usage)
 
-    elif args.string or args.file:
-        output = []
+    my_ref = args.ref
 
-        for _lang_ in args.lang:
+    if os.path.isfile(my_ref):
+        with open('my_ref') as f:
+            my_ref = f.read().splitlines()
 
-            if args.string:
-                raw_out = GetVerses(_lang_).retrieve_verse(args.string)
-                output.append(raw_out)
+    output = []
 
-            elif args.file:
-                with open(args.file, 'r') as l:
-                    my_refs = l.read().splitlines()
+    for _lang_ in args.lang:
 
-                raw_out = (GetVerses(_lang_).retrieve_verse(my_refs))
-                output.append(raw_out)
+        raw_out = GetVerses(_lang_).retrieve_verse(my_ref)
+        output.append(raw_out)
 
-        x = len(output)
-        y = len(output[0])
-        z = [(b, a) for a in range(x) for b in range(y)]
-        z.sort()
+    x = len(output)
+    y = len(output[0])
+    z = [(b, a) for a in range(x) for b in range(y)]
+    z.sort()
 
-        if args.output:
-            with open(args.output, 'w+', encoding='utf8') as out:
-                for b, a in z:
-                    out.write(output[a][b]['ref'] + ' ' + output[a][b]['verse'] + '\n\n')
-
-        else:
+    if args.output:
+        with open(args.output, 'w+', encoding='utf8') as out:
             for b, a in z:
-                print(output[a][b]['ref'] + '\n' + output[a][b]['verse'] + "\n")
-                print()
+                out.write(output[a][b]['ref'] + ' ' + output[a][b]['verse'] + '\n\n')
+
+    else:
+        for b, a in z:
+            print(output[a][b]['ref'] + '\n' + output[a][b]['verse'])
+            print()

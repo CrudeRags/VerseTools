@@ -50,19 +50,19 @@ def set_resource_path(pref_path,pref):
     
     return 
 
-def move_resources(pref_path,pref):
+#def move_resources(pref_path,pref):
     
-    old_path = pref['resource_path'] 
+ #   old_path = pref['resource_path'] 
 
-    set_resource_path(pref_path,pref)
+  #  set_resource_path(pref_path,pref)
 
-    new_path = pref['resource_path']
+   # new_path = pref['resource_path']
 
-    print("moving resources to the set directory")
+    #print("moving resources to the set directory")
     
-    _ = shutil.move(old_path,new_path)
+    #_ = shutil.move(old_path,new_path)
 
-    return
+   # return
 
 if __name__ == "__main__":
     file_path = os.path.abspath(os.path.dirname(__file__))
@@ -75,7 +75,4 @@ if __name__ == "__main__":
         pref = json.load(p)
 
     refresh(_pref_path_)
-
-    my_database_path = os.path.abspath(pref.get('resource_path'))
-    if not os.path.exists(my_database_path):
-        os.makedirs(my_database_path)
+    set_resource_path(_pref_path_,pref)
