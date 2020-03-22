@@ -4,6 +4,7 @@ dist
 verse_tools_CrudeRags.egg-info
 .idea
 *.xml
+config.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

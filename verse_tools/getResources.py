@@ -2,53 +2,29 @@ import requests
 import os
 import json
 import sys
+import shutil
 
 '''A python script to download the necessary Bibles to get verses from. 
 These bibles are present in a github account and should be downloaded 
 from it to get the getVerses.py to work '''
 
-def load_preferences():
-    _pref_path_ = os.path.join(os.path.dirname(__file__), 'resources/preferences.json')
-
-    with open(_pref_path_, 'r', encoding='utf8') as f:
-        _pref = json.load(f)
-
-    return _pref,_pref_path_
-
-
-def refresh():
-    git = requests.get('https://api.github.com/repos/CrudeRags/Bible-database/commits')
-    trl = git.json()[0]['commit']['tree']['url']  # url of tree in the latest commit
-    trl_get = requests.get(trl)
-
-    my_languages = []
-
-    for x in trl_get.json()['tree']:
-        if x['path'][-2:] == 'db':
-            my_languages.append(x['path'].split('Bible')[0])
-
-    _pref, preference = load_preferences()
-
-    _pref['git_languages'] = my_languages
-
-    with open(preference, 'w', encoding='utf8') as f:
-        json.dump(_pref, f, indent=2)
-
-    return
-
 
 # Variable Declaration
+
+file_path = os.path.abspath(os.path.dirname(__file__))
+_pref_path_ = os.path.join(file_path, 'config.json')
+
+if not os.path.isfile(_pref_path_):
+    os.system("python "+file_path+"config.py")
+
+with open(_pref_path_, 'r', encoding='utf8') as f:
+    pref = json.load(f)
+
 db_url = "https://raw.githubusercontent.com/CrudeRags/Bible-database-for-python/master/"
 
-try:
-    pref, preference_path = load_preferences()
-    allLanguages = pref['git_languages']
-except KeyError:
-    refresh()
-    pref, preference_path = load_preferences()
-    allLanguages = pref['git_languages']
+allLanguages = pref['git_languages']
 
-my_database_path = os.path.join(os.path.dirname(__file__), 'resources/Bibles/')
+my_database_path = os.path.abspath(pref.get('resource_path'))
 if not os.path.exists(my_database_path):
     os.makedirs(my_database_path)
 
@@ -71,8 +47,6 @@ def process_input(i):
         else:
             yield int(x)
 
-
-# Start of Program
 def get():
     print(availableBibles)
     print()
@@ -83,7 +57,7 @@ def get():
 
     for x in to_download:
         bible_name = x + "Bible.db"
-        with open(my_database_path + bible_name, 'wb') as out:
+        with open(my_database_path +"\\"+ bible_name, 'wb') as out:
             r = requests.get(db_url + bible_name, stream=True)
             print("Downloading {}".format(bible_name))
             total_length = r.headers.get('content-length')
@@ -103,6 +77,6 @@ def get():
 
         print("Finished downloading {}".format(bible_name))
 
-
 if __name__ == '__main__':
     get()
+    
