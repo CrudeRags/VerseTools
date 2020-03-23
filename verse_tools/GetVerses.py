@@ -4,7 +4,7 @@ import sys
 import re
 import argparse
 import json
-from verse_tools.getResources import get
+from verse_tools.getResources import get as gL
 from verse_tools.getResources import main as gR
 from verse_tools import config
 
@@ -23,7 +23,7 @@ def get_resources(lang=None):
     if lang is None:
         gR()
     else:
-        get(lang)
+        gL(lang)
 
 class GetVerses:
     # Initialize class with language only
@@ -144,7 +144,7 @@ class GetVerses:
 
         return tuple(reference_list)
 
-    def retrieve_verse(self, references):
+    def get(self, references):
         verse_list = []
 
         my_references = self.__process_references__(references)
@@ -256,7 +256,7 @@ if __name__ == "__main__":
 
     for _lang_ in args.lang:
 
-        raw_out = GetVerses(_lang_).retrieve_verse(my_ref)
+        raw_out = GetVerses(_lang_).get(my_ref)
         output.append(raw_out)
 
     x = len(output)

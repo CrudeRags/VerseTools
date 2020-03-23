@@ -18,7 +18,7 @@ from verse_tools import GetVerses
 
 retriever = GetVerses.GetVerses['English']
 
-my_verse = retriever.retrieve_verse("John 3:16")
+my_verse = retriever.get("John 3:16")
 
 ## Authors
 
