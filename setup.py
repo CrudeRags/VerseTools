@@ -4,8 +4,8 @@ with open("README.md",'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="verse_tools-CrudeRags",
-    version="0.0.2",
+    name="verseTools-CrudeRags",
+    version="0.0.3",
     author="Crude Rags",
     author_email="crude.rags@gmail.com",
     description="A package to get verses from different languages given reference in English",

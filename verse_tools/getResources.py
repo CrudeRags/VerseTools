@@ -3,6 +3,7 @@ import os
 import json
 import sys
 import shutil
+from verse_tools import config
 
 '''A python script to download the necessary Bibles to get verses from. 
 These bibles are present in a github account and should be downloaded 
@@ -15,7 +16,7 @@ file_path = os.path.abspath(os.path.dirname(__file__))
 _pref_path_ = os.path.join(file_path, 'config.json')
 
 if not os.path.isfile(_pref_path_):
-    os.system("python "+file_path+"\config.py")
+    config.main()
 
 with open(_pref_path_, 'r', encoding='utf8') as f:
     pref = json.load(f)
@@ -74,7 +75,7 @@ def get(lang):
 
     print("Finished downloading {}".format(bible_name))
 
-if __name__ == '__main__':
+def main():
     print(availableBibles)
     print()
     print(downloadableBibles)
@@ -85,4 +86,6 @@ if __name__ == '__main__':
 
     for x in to_download:        
         get(x)
-    
+
+if __name__ == '__main__':
+    main()

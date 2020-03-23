@@ -19,7 +19,7 @@ def default_config(pref_path):
     save_config(pref_path,config)
     return
 
-def refresh(pref_path):
+def refresh(pref_path,pref):
     git = requests.get('https://api.github.com/repos/CrudeRags/Bible-database/commits')
     trl = git.json()[0]['commit']['tree']['url']  # url of tree in the latest commit
     trl_get = requests.get(trl)
@@ -64,7 +64,7 @@ def set_resource_path(pref_path,pref):
 
    # return
 
-if __name__ == "__main__":
+def main():
     file_path = os.path.abspath(os.path.dirname(__file__))
     _pref_path_ = os.path.join(file_path, 'config.json')
 
@@ -74,5 +74,8 @@ if __name__ == "__main__":
     with open(_pref_path_,'r') as p:
         pref = json.load(p)
 
-    refresh(_pref_path_)
+    refresh(_pref_path_,pref)
     set_resource_path(_pref_path_,pref)
+
+if __name__ == "__main__":
+    main()

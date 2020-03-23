@@ -4,15 +4,15 @@ import sys
 import re
 import argparse
 import json
-from getResources import get
+from verse_tools.getResources import get
+from verse_tools.getResources import main as gR
+from verse_tools import config
 
 def get_pref():
     config_path = os.path.join(os.path.dirname(__file__), "config.json")
 
     if not os.path.isfile(config_path):
-        run = 'python '+os.path.join(os.path.dirname(__file__),"getResources.py")
-        print(run)
-        os.system(run)
+        config.main()
 
     with open(config_path, 'r') as rf:
         pref = json.load(rf)
@@ -21,8 +21,7 @@ def get_pref():
 
 def get_resources(lang=None):
     if lang is None:
-        path = os.path.join(os.path.dirname(__file__),"getResources.py")
-        os.system('python '+path)
+        gR()
     else:
         get(lang)
 
