@@ -3,6 +3,7 @@ import os
 import json
 import sys
 import shutil
+from verse_tools import config
 
 '''A python script to download the necessary Bibles to get verses from. 
 These bibles are present in a github account and should be downloaded 
@@ -15,7 +16,7 @@ file_path = os.path.abspath(os.path.dirname(__file__))
 _pref_path_ = os.path.join(file_path, 'config.json')
 
 if not os.path.isfile(_pref_path_):
-    os.system("python "+file_path+"config.py")
+    config.main()
 
 with open(_pref_path_, 'r', encoding='utf8') as f:
     pref = json.load(f)
@@ -39,6 +40,9 @@ downloadableBibles = "Remote Bibles:\n" + '\n'.join(display)
 
 
 def process_input(i):
+    if i == 'x' or i == 'X':
+        sys.exit()
+
     i = i.split(',')
     for x in i:
         if '-' in x:
@@ -47,36 +51,41 @@ def process_input(i):
         else:
             yield int(x)
 
-def get():
+def get(lang):
+    bible_name = lang+"Bible.db"
+    if lang not in downloadableLanguages:
+        sys.exit("{} not available. \nAvailable Bibles: {}".format(bible_name,downloadableBibles))
+    with open(my_database_path +"\\"+ bible_name, 'wb') as out:
+        r = requests.get(db_url + bible_name, stream=True)
+        print("Downloading {}".format(bible_name))
+        total_length = r.headers.get('content-length')
+
+        if total_length is None:  # header does not have content-length
+            out.write(r.content)
+        else:
+            dl = 0
+            total_length = int(total_length)
+            for chunk in r.iter_content(chunk_size=4096):
+                dl += len(chunk)
+                out.write(chunk)
+                done = int(25 * dl / total_length)
+                remaining = 25 - done
+                sys.stdout.write("\r[{}{}]".format('=' * done, ' ' * remaining))
+                sys.stdout.flush()
+
+    print("Finished downloading {}".format(bible_name))
+
+def main():
     print(availableBibles)
     print()
     print(downloadableBibles)
+    print("Enter x to exit")
     raw_input = input("\nYour Choice (can choose more than one): ")
 
     to_download = [downloadableLanguages[i] for i in process_input(raw_input)]
 
-    for x in to_download:
-        bible_name = x + "Bible.db"
-        with open(my_database_path +"\\"+ bible_name, 'wb') as out:
-            r = requests.get(db_url + bible_name, stream=True)
-            print("Downloading {}".format(bible_name))
-            total_length = r.headers.get('content-length')
-
-            if total_length is None:  # header does not have content-length
-                out.write(r.content)
-            else:
-                dl = 0
-                total_length = int(total_length)
-                for chunk in r.iter_content(chunk_size=4096):
-                    dl += len(chunk)
-                    out.write(chunk)
-                    done = int(25 * dl / total_length)
-                    remaining = 25 - done
-                    sys.stdout.write("\r[{}{}]".format('=' * done, ' ' * remaining))
-                    sys.stdout.flush()
-
-        print("Finished downloading {}".format(bible_name))
+    for x in to_download:        
+        get(x)
 
 if __name__ == '__main__':
-    get()
-    
+    main()
