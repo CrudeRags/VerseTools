@@ -1,6 +1,7 @@
 *.db
 build
 dist
+.vscode
 verseTools_CrudeRags.egg-info
 .idea
 *.xml
