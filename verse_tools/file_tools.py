@@ -13,6 +13,18 @@ def extract_paragraph_refs(file_string):
     my_refs = refPattern.findall(file_string)
     return [x for x in map(str.strip, my_refs)]
 
+def extract_ref_from_book(file_string):
+    chapPattern = re.compile(r"Chapter (\d+)")
+    refPattern = re.compile(r'(\{.*?\})')
+    chapter = 1
+    myList = []
+    for x in file_string.splitlines():
+        if chapPattern.search(x):
+            chapter = chapPattern.search(x).group(1)
+        if refPattern.search(x):
+            myList.append((chapter,refPattern.search(x).group(1)))
+    return myList
+
 
 def __getVerses__(refs, lang):
     g = gv.GetVerses(lang=lang)   
