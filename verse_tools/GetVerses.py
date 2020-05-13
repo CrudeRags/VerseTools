@@ -68,8 +68,8 @@ class GetVerses:
                          "Eccl": 20, "Eccles": 20, "Eccle": 20, "Ecc": 20,
                          "Ec": 20, "Song": 21, "Isaiah": 22, "Isa": 22,
                          "Is": 22, "Jeremiah": 23, "Jer": 23, "Je": 23,
-                         "Jr": 23, "Lam": 24, "La": 24, "Zephaniah": 35,
-                         "Ezekiel": 25, "Ezek": 25, "Eze": 25, "Ezk": 25,
+                         "Jr": 23, "Lam": 24, "La": 24, "Lamentations": 24, "Zephaniah": 35,
+                         "Ezekiel": 25, "Ezek": 25, "Eze": 25, "Ezk": 25, "Lamentation": 24,
                          "Daniel": 26, "Dan": 26, "Da": 26, "Dn": 26, "Jl": 28,
                          "Hosea": 27, "Hos": 27, "Ho": 27, "Joel": 28, "Ge": 0,
                          "Amos": 29, "Am": 29, "Obadiah": 30, "Jon": 31,
@@ -78,7 +78,7 @@ class GetVerses:
                          "Habakkuk": 34, "Hab": 34, "Gen": 0, "Zechariah": 37,
                          "Zeph": 35, "Zep": 35, "Zp": 35, "Haggai": 36,
                          "Hag": 36, "Hg ": 36, "Zech": 37, "Colossians": 50,
-                         "Zec": 37, "Zc": 37, "Malachi": 38, "Mal": 38,
+                         "Zec": 37, "Zc": 37, "Malachi": 38, "Mal": 38, "Mat": 39,
                          "Ml": 38, "Matthew": 39, "Mt": 39, "Matt": 39,
                          "Mark": 40, "Mk": 40, "Mrk": 40, "Luke": 41, "Lk": 41,
                          "Luk": 41, "John": 42, "Jn": 42, "Jhn": 42, "Gn": 0,
@@ -132,19 +132,23 @@ class GetVerses:
         # Encoded form is needed for retrieving data from the database
         _raw_ = []
         _processed_ = []
-        
+
         if isinstance(references, list):
             for item in references:
-                items = item.split(";")
-                for i in items:
-                    if re.match(r'\d+:\s*\d+[-\d\s,:;]*',i.strip()):
-                        prev = items[0]
-                        book = re.search(r'(\d*\s*\w+)\s*\d+',prev).group(1)
-                        i = book + i
-                _raw_.append(i)
+                try:
+                    items = item.split(";")
+                    for i in items:
+                        if re.match(r'\d+:\s*\d+[-\d\s,:;]*',i.strip()):
+                            prev = items[0]
+                            book = re.search(r'(\d*\s*\w+)\s*\d+',prev).group(1)
+                            i = book + i
+                        _raw_.append(i)
+                except AttributeError:
+                    print(item)
+                    pass
 
         elif isinstance(references, str):
-            items = item.split(";")
+            items = references.split(";")
             for i in items:
                 if re.match(r'\d+:\s*\d+[-\d\s,:;]*',i.strip()):
                     prev = items[0]
@@ -157,17 +161,19 @@ class GetVerses:
                 """Undetermined Reference type - Only a  list of references or
                 a single reference is supported""")
         
-        # print(_raw_)        # test
         for ref in _raw_:
-            ref = ref.strip()
-            ref = re.sub(r'^(\d)\s', r'\1', ref)
-            encoded_ref = self.__encode_ref__(ref)
-            self.c.execute(
-                'SELECT name FROM bookIndex WHERE num=?', (encoded_ref[0][0],))
-            book_name = str(self.c.fetchone()[0])
-            _, chap_verse = ref.split(' ', 1)
-            new_reference = book_name + ' ' + chap_verse
-            _processed_.append((new_reference, encoded_ref))
+            try:
+                ref = ref.strip()
+                ref = re.sub(r'^(\d)\s', r'\1', ref)
+                encoded_ref = self.__encode_ref__(ref)
+                self.c.execute(
+                    'SELECT name FROM bookIndex WHERE num=?', (encoded_ref[0][0],))
+                book_name = str(self.c.fetchone()[0])
+                _, chap_verse = ref.split(' ', 1)
+                new_reference = book_name + ' ' + chap_verse
+                _processed_.append((new_reference, encoded_ref))
+            except:
+                pass
 
         return _processed_
 
@@ -210,7 +216,10 @@ class GetVerses:
                 self.c.execute(
                     """SELECT verse FROM bible WHERE Book=? AND Chapter=?
                     AND Versecount=?""", reference)
-                verses.append((str(self.c.fetchone()[0])))
+                try:
+                    verses.append((str(self.c.fetchone()[0])))
+                except:
+                    pass
 
             verse_dict['ref'] = newReference
             verse_dict['verse'] = ' '.join(verses)
